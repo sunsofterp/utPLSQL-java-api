@@ -5,10 +5,7 @@ import org.hamcrest.Matcher;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.verification.VerificationMode;
-import org.utplsql.api.CustomTypes;
-import org.utplsql.api.FileMapping;
-import org.utplsql.api.TestRunnerOptions;
-import org.utplsql.api.Version;
+import org.utplsql.api.*;
 
 import java.sql.Array;
 import java.sql.CallableStatement;
@@ -24,7 +21,7 @@ public class DynamicTestRunnerStatementTest {
     private DynamicTestRunnerStatement testRunnerStatement;
     private CallableStatement callableStatement;
     private OracleConnection oracleConnection;
-    private TestRunnerOptions options;
+    private TestRunnerOptionsBean options;
     private Object[] expectedFileMapping;
 
     private OracleConnection getMockedOracleConnection( Object[] expectedFileMapping ) throws SQLException {
@@ -70,18 +67,18 @@ public class DynamicTestRunnerStatementTest {
     private void checkBaseParameters() throws SQLException {
         assertThat(testRunnerStatement.getSql(), containsString("a_paths => ?"));
         verify(callableStatement).setArray(1, null);
-        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.pathList.toArray());
+        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.getPathList().toArray());
 
         assertThat(testRunnerStatement.getSql(), containsString("a_reporters => ?"));
         verify(callableStatement).setArray(2, null);
-        verify(oracleConnection).createOracleArray(CustomTypes.UT_REPORTERS, options.reporterList.toArray());
+        verify(oracleConnection).createOracleArray(CustomTypes.UT_REPORTERS, options.getReporterList().toArray());
 
         assertThat(testRunnerStatement.getSql(), containsString("a_color_console => (case ? when 1 then true else false end)"));
         verify(callableStatement).setInt(3, 0);
 
         assertThat(testRunnerStatement.getSql(), containsString("a_coverage_schemes => ?"));
         verify(callableStatement).setArray(4, null);
-        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.coverageSchemes.toArray());
+        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.getCoverageSchemes().toArray());
 
         assertThat(testRunnerStatement.getSql(), containsString("a_source_file_mappings => ?"));
         verify(callableStatement).setArray(5, null);
@@ -92,11 +89,11 @@ public class DynamicTestRunnerStatementTest {
 
         assertThat(testRunnerStatement.getSql(), containsString("a_include_objects => ?"));
         verify(callableStatement).setArray(7, null);
-        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.includeObjects.toArray());
+        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.getIncludeObjects().toArray());
 
         assertThat(testRunnerStatement.getSql(), containsString("a_exclude_objects => ?"));
         verify(callableStatement).setArray(8, null);
-        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.includeObjects.toArray());
+        verify(oracleConnection).createOracleArray(CustomTypes.UT_VARCHAR2_LIST, options.getIncludeObjects().toArray());
     }
 
     private void checkFailOnError( boolean shouldBeThere ) throws SQLException {

@@ -1,10 +1,7 @@
 package org.utplsql.api.testRunner;
 
 import org.junit.jupiter.api.Test;
-import org.utplsql.api.AbstractDatabaseTest;
-import org.utplsql.api.FileMapperOptions;
-import org.utplsql.api.TestRunnerOptions;
-import org.utplsql.api.Version;
+import org.utplsql.api.*;
 import org.utplsql.api.reporter.CoreReporters;
 import org.utplsql.api.reporter.ReporterFactory;
 
@@ -14,26 +11,25 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class TestRunnerStatementProviderIT extends AbstractDatabaseTest {
 
-    public static TestRunnerOptions getCompletelyFilledOptions() {
-        TestRunnerOptions options = new TestRunnerOptions();
-        options.pathList.add("path");
-        options.reporterList.add(ReporterFactory.createEmpty().createReporter(CoreReporters.UT_DOCUMENTATION_REPORTER.name()));
-        options.coverageSchemes.add("APP");
-        options.sourceMappingOptions = new FileMapperOptions(Arrays.asList("sourcePath"));
-        options.testMappingOptions = new FileMapperOptions(Arrays.asList("testPath"));
-        options.includeObjects.add("include1");
-        options.excludeObjects.add("exclude1");
-        options.failOnErrors = true;
-        options.clientCharacterSet = "UTF8";
-        options.randomTestOrder = true;
-        options.randomTestOrderSeed = 123;
-        options.tags.add("WIP");
-        options.tags.add("long_running");
+    public static TestRunnerOptionsBean getCompletelyFilledOptions() {
+        TestRunnerOptionsBean options = new TestRunnerOptionsBean();
+        options.getPathList().add("path");
+        options.getReporterList().add(ReporterFactory.createEmpty().createReporter(CoreReporters.UT_DOCUMENTATION_REPORTER.name()));
+        options.getCoverageSchemes().add("APP");
+        options.setSourceMappingOptions(new FileMapperOptions(Arrays.asList("sourcePath")));
+        options.setTestMappingOptions(new FileMapperOptions(Arrays.asList("testPath")));
+        options.getIncludeObjects().add("include1");
+        options.getExcludeObjects().add("exclude1");
+        options.setFailOnErrors(true);
+        options.setClientCharacterSet("UTF8");
+        options.setRandomTestOrder(true);
+        options.setRandomTestOrderSeed(123);
+        options.getTags().add("WIP");
+        options.getTags().add("long_running");
         return options;
     }
 
