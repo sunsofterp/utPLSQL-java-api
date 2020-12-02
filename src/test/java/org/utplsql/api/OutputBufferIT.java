@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +43,17 @@ class OutputBufferIT extends AbstractDatabaseTest {
         ExecutorService executorService = Executors.newFixedThreadPool(2);
 
         try {
+            final Connection conn = getConnection();
             final Reporter reporter = createReporter();
 
             Future<Object> task1 = executorService.submit(() -> {
                 try {
-                    new TestRunner()
+                    new TestRunner(
+                        new TestRunnerOptionsBuilder()
                             .addPath(getUser())
                             .addReporter(reporter)
-                            .run(getConnection());
+                            .build(conn)
+                    ).run(conn);
 
                     return Boolean.TRUE;
                 } catch (SQLException e) {
@@ -102,11 +106,14 @@ class OutputBufferIT extends AbstractDatabaseTest {
 
     @Test
     void fetchAllLines() throws SQLException {
+        final Connection conn = getConnection();
         final Reporter reporter = createReporter();
-        new TestRunner()
+        new TestRunner(
+            new TestRunnerOptionsBuilder()
                 .addPath(getUser())
                 .addReporter(reporter)
-                .run(getConnection());
+                .build(conn)
+        ).run(conn);
 
         List<String> outputLines = reporter.getOutputBuffer().fetchAll(getConnection());
 
@@ -115,12 +122,17 @@ class OutputBufferIT extends AbstractDatabaseTest {
 
     @Test
     void getOutputFromSonarReporter() throws SQLException {
-        Reporter reporter = new DefaultReporter(CoreReporters.UT_SONAR_TEST_REPORTER.name(), null).init(newConnection());
+        final Reporter reporter = new DefaultReporter(
+                CoreReporters.UT_SONAR_TEST_REPORTER.name(),
+                null
+        ).init(newConnection());
 
-        new TestRunner()
+        new TestRunner(
+            new TestRunnerOptionsBuilder()
                 .addPath(getUser())
                 .addReporter(reporter)
-                .run(getConnection());
+                .build(getConnection())
+        ).run(getConnection());
 
         List<String> outputLines = reporter.getOutputBuffer().fetchAll(getConnection());
 
@@ -134,11 +146,12 @@ class OutputBufferIT extends AbstractDatabaseTest {
         if (proxy.getUtPlsqlVersion().isGreaterOrEqualThan(Version.V3_1_2)) {
             Reporter reporter = new DefaultReporter(CoreReporters.UT_SONAR_TEST_REPORTER.name(), null).init(getConnection());
 
-            TestRunner tr = new TestRunner()
+            new TestRunner(
+                new TestRunnerOptionsBuilder()
                     .addPath(getUser())
-                    .addReporter(reporter);
-
-            tr.run(getConnection());
+                    .addReporter(reporter)
+                    .build(getConnection())
+            ).run(getConnection());
 
             List<String> outputLines = reporter.getOutputBuffer().fetchAll(getConnection());
 

@@ -2,6 +2,7 @@ package org.utplsql.api.testRunner;
 
 import oracle.jdbc.OracleConnection;
 import org.utplsql.api.CustomTypes;
+import org.utplsql.api.TestRunnerOptions;
 import org.utplsql.api.TestRunnerOptionsBean;
 import org.utplsql.api.Version;
 import org.utplsql.api.compatibility.OptionalFeatures;
@@ -16,10 +17,10 @@ public class DynamicTestRunnerStatement implements TestRunnerStatement {
     private CallableStatement stmt;
     private final OracleConnection oracleConnection;
     private final Version utPlSQlVersion;
-    private final TestRunnerOptionsBean options;
+    private final TestRunnerOptions options;
     private final DynamicParameterList dynamicParameterList;
 
-    private DynamicTestRunnerStatement(Version utPlSQlVersion, OracleConnection connection, TestRunnerOptionsBean options, CallableStatement statement ) throws SQLException {
+    private DynamicTestRunnerStatement(Version utPlSQlVersion, OracleConnection connection, TestRunnerOptions options, CallableStatement statement ) throws SQLException {
         this.utPlSQlVersion = utPlSQlVersion;
         this.oracleConnection = connection;
         this.options = options;
@@ -96,7 +97,7 @@ public class DynamicTestRunnerStatement implements TestRunnerStatement {
         }
     }
 
-    public static DynamicTestRunnerStatement forVersion(Version version, Connection connection, TestRunnerOptionsBean options, CallableStatement statement ) throws SQLException {
+    public static DynamicTestRunnerStatement forVersion(Version version, Connection connection, TestRunnerOptions options, CallableStatement statement ) throws SQLException {
         OracleConnection oraConn = connection.unwrap(OracleConnection.class);
         return new DynamicTestRunnerStatement(version, oraConn, options, statement);
     }

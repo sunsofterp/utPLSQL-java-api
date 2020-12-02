@@ -1,6 +1,6 @@
 package org.utplsql.api.testRunner;
 
-import org.utplsql.api.TestRunnerOptionsBean;
+import org.utplsql.api.TestRunnerOptions;
 import org.utplsql.api.Version;
 
 import java.sql.Connection;
@@ -26,7 +26,7 @@ public class TestRunnerStatementProvider {
      * @return TestRunnerStatment compatible with the database framework
      * @throws SQLException
      */
-    public static TestRunnerStatement getCompatibleTestRunnerStatement(Version databaseVersion, TestRunnerOptionsBean options, Connection conn) throws SQLException {
+    public static TestRunnerStatement getCompatibleTestRunnerStatement(Version databaseVersion, TestRunnerOptions options, Connection conn) throws SQLException {
         return DynamicTestRunnerStatement.forVersion(databaseVersion, conn, options, null);
     }
 }

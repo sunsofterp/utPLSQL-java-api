@@ -1,5 +1,6 @@
 package org.utplsql.api;
 
+import org.utplsql.api.compatibility.CompatibilityProxy;
 import org.utplsql.api.reporter.Reporter;
 
 import java.nio.charset.Charset;
@@ -16,6 +17,7 @@ import java.util.Set;
 public class TestRunnerOptionsBean implements TestRunnerOptions {
     private final List<String> pathList = new ArrayList<>();
     private final List<Reporter> reporterList = new ArrayList<>();
+    private CompatibilityProxy compatibilityProxy;
     private final List<String> coverageSchemes = new ArrayList<>();
     private final List<String> sourceFiles = new ArrayList<>();
     private final List<String> testFiles = new ArrayList<>();
@@ -31,34 +33,42 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
     private Integer randomTestOrderSeed;
     private final Set<String> tags = new LinkedHashSet<>();
 
+    @Override
     public List<String> getPathList() {
         return pathList;
     }
 
+    @Override
     public List<Reporter> getReporterList() {
         return reporterList;
     }
 
+    @Override
     public List<String> getCoverageSchemes() {
         return coverageSchemes;
     }
 
+    @Override
     public List<String> getSourceFiles() {
         return sourceFiles;
     }
 
+    @Override
     public List<String> getTestFiles() {
         return testFiles;
     }
 
+    @Override
     public List<String> getIncludeObjects() {
         return includeObjects;
     }
 
+    @Override
     public List<String> getExcludeObjects() {
         return excludeObjects;
     }
 
+    @Override
     public boolean isColorConsole() {
         return colorConsole;
     }
@@ -67,6 +77,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.colorConsole = colorConsole;
     }
 
+    @Override
     public FileMapperOptions getSourceMappingOptions() {
         return sourceMappingOptions;
     }
@@ -75,6 +86,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.sourceMappingOptions = sourceMappingOptions;
     }
 
+    @Override
     public FileMapperOptions getTestMappingOptions() {
         return testMappingOptions;
     }
@@ -83,6 +95,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.testMappingOptions = testMappingOptions;
     }
 
+    @Override
     public boolean isFailOnErrors() {
         return failOnErrors;
     }
@@ -91,6 +104,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.failOnErrors = failOnErrors;
     }
 
+    @Override
     public boolean getSkipCompatibilityCheck() {
         return skipCompatibilityCheck;
     }
@@ -99,6 +113,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.skipCompatibilityCheck = skipCompatibilityCheck;
     }
 
+    @Override
     public String getClientCharacterSet() {
         return clientCharacterSet;
     }
@@ -107,6 +122,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.clientCharacterSet = clientCharacterSet;
     }
 
+    @Override
     public boolean isRandomTestOrder() {
         return randomTestOrder;
     }
@@ -115,6 +131,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.randomTestOrder = randomTestOrder;
     }
 
+    @Override
     public Integer getRandomTestOrderSeed() {
         return randomTestOrderSeed;
     }
@@ -123,6 +140,7 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
         this.randomTestOrderSeed = randomTestOrderSeed;
     }
 
+    @Override
     public Set<String> getTags() {
         return tags;
     }
@@ -130,5 +148,14 @@ public class TestRunnerOptionsBean implements TestRunnerOptions {
     @Override
     public String tagsAsCommaDelimitedString() {
         return String.join(",", tags);
+    }
+
+    @Override
+    public CompatibilityProxy getCompatibilityProxy() {
+        return compatibilityProxy;
+    }
+
+    public void setCompatibilityProxy(CompatibilityProxy compatibilityProxy) {
+        this.compatibilityProxy = compatibilityProxy;
     }
 }

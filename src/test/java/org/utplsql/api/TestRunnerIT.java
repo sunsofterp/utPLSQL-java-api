@@ -34,21 +34,24 @@ class TestRunnerIT extends AbstractDatabaseTest {
      */
     @Test
     void runWithoutCompatibilityCheck() throws SQLException, InvalidVersionException {
-
-        DatabaseInformation databaseInformation = new DefaultDatabaseInformation();
+        final Connection conn = getConnection();
+        final DatabaseInformation databaseInformation = new DefaultDatabaseInformation();
 
         // We can only test this for the versions of the latest TestRunnerStatement-Change
         if ( OptionalFeatures.RANDOM_EXECUTION_ORDER.isAvailableFor(databaseInformation.getUtPlsqlFrameworkVersion(getConnection())) ) {
-            new TestRunner()
+            new TestRunner(
+                new TestRunnerOptionsBuilder()
                     .skipCompatibilityCheck(true)
-                    .run(getConnection());
+                    .build(conn)
+            ).run(conn);
         }
     }
 
     @Test
     void runWithManyReporters() throws SQLException {
-        Connection conn = getConnection();
-        new TestRunner()
+        final Connection conn = getConnection();
+        new TestRunner(
+            new TestRunnerOptionsBuilder()
                 .addPath(getUser())
                 .addReporter(CoreReporters.UT_DOCUMENTATION_REPORTER.name())
                 .addReporter(CoreReporters.UT_COVERAGE_HTML_REPORTER.name())
@@ -57,7 +60,8 @@ class TestRunnerIT extends AbstractDatabaseTest {
                 .addReporter(CoreReporters.UT_SONAR_TEST_REPORTER.name())
                 .addReporter(CoreReporters.UT_TEAMCITY_REPORTER.name())
                 .addReporter(CoreReporters.UT_XUNIT_REPORTER.name())
-                .run(conn);
+                .build(conn)
+        ).run(conn);
     }
 
 
@@ -66,33 +70,39 @@ class TestRunnerIT extends AbstractDatabaseTest {
      */
     @Test
     void failOnErrors() throws SQLException, InvalidVersionException {
-        Connection conn = getConnection();
+        final Connection conn = getConnection();
 
-        CompatibilityProxy proxy = new CompatibilityProxy(conn);
+        final CompatibilityProxy proxy = new CompatibilityProxy(conn);
 
         if (proxy.getUtPlsqlVersion().isGreaterOrEqualThan(Version.V3_0_3)) {
-            Executable throwingTestRunner = () -> new TestRunner()
+            Executable throwingTestRunner = () -> new TestRunner(
+                new TestRunnerOptionsBuilder()
                     .failOnErrors(true)
-                    .run(conn);
+                    .build(conn)
+            ).run(conn);
             assertThrows(SomeTestsFailedException.class, throwingTestRunner);
         }
     }
 
     @Test
     void runWithRandomExecutionOrder() throws SQLException {
-        CompatibilityProxy proxy = new CompatibilityProxy(getConnection());
-
-        new TestRunner()
+        final Connection conn = getConnection();
+        new TestRunner(
+            new TestRunnerOptionsBuilder()
                 .randomTestOrder(true)
                 .randomTestOrderSeed(123)
-                .run(getConnection());
+                .build(conn)
+        ).run(conn);
     }
 
     @Test
     void runWithTags() throws SQLException {
-        new TestRunner()
+        final Connection conn = getConnection();
+        new TestRunner(
+            new TestRunnerOptionsBuilder()
                 .addTag("none")
-                .run(getConnection());
+                .build(conn)
+        ).run(conn);
     }
 
 }

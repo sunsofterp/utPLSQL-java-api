@@ -1,6 +1,6 @@
 package org.utplsql.api.compatibility;
 
-import org.utplsql.api.TestRunnerOptionsBean;
+import org.utplsql.api.TestRunnerOptions;
 import org.utplsql.api.Version;
 import org.utplsql.api.db.DatabaseInformation;
 import org.utplsql.api.db.DefaultDatabaseInformation;
@@ -171,7 +171,7 @@ public class CompatibilityProxy {
      * @return
      * @throws SQLException
      */
-    public TestRunnerStatement getTestRunnerStatement(TestRunnerOptionsBean options, Connection conn) throws SQLException {
+    public TestRunnerStatement getTestRunnerStatement(TestRunnerOptions options, Connection conn) throws SQLException {
         return TestRunnerStatementProvider.getCompatibleTestRunnerStatement(utPlsqlVersion, options, conn);
     }
 
